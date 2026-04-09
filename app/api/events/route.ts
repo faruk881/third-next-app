@@ -41,6 +41,17 @@ export async function POST(req: NextRequest){
         return NextResponse.json({message: "Event created successfully", event: createdEvent},{status: 201});
     } catch(e) {
         console.error(e);
-        return NextResponse.json({message: 'Event Creation Failed', error:e instanceof Error ? e.message:'unknown'},{status: 500})
+        return NextResponse.json({message: 'Event Creation Failed', error:e instanceof Error ? e.message:e},{status: 500})
+    }
+}
+
+export async function GET() {
+    try {
+        await (connectDB)
+        const events = await Event.find().sort({createdAt: -1});
+
+        return NextResponse.json({message: 'Event list successfull fetched',events},{status: 200});
+    } catch (e) {
+        return NextResponse.json({message: "Event fatching failed",error:e},{status: 500});
     }
 }
